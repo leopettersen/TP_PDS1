@@ -22,4 +22,14 @@ struct Estacao
     struct DataLeitura data;
 };
 
+/**
+ * @brief aloca a memória dinamicamente para n floats.
+ * 
+ * Esta função aloca memória dinamicamente, utilizando malloc para um número n de números flutuantes.
+ * 
+ * @param n número de floats que serão alocados (int).
+ * @return *leituras: retorna um array de números flutuantes (float).
+ */
+float *lerLeituras(int n);
+
 #endif
