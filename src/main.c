@@ -15,4 +15,14 @@ int main()
     } while (n < 1 || n > 9999);
 
     float *leituras = lerLeituras(n);
+
+
+
+
+
+
+
+
+    free(leituras);
+    return 0;
 }
