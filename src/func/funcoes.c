@@ -1,3 +1,4 @@
+/* funcoes.c — Implementações das funções declaradas em funcoes.h. */
 #include "funcoes.h"
 
 float *lerLeituras(int n)

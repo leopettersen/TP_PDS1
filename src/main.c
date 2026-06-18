@@ -1,3 +1,4 @@
+/* main.c — Ponto de entrada do sistema. */
 #include "func/funcoes.h"
 #include <stdio.h>
 #include <stdlib.h>

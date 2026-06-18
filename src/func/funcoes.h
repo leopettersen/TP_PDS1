@@ -1,3 +1,4 @@
+/* funcoes.h — Declarações de tipos e protótipos do sistema. */
 #include <stdbool.h>
 #include <stdlib.h>
 #include <stdio.h>
