@@ -1,5 +1,6 @@
 /* funcoes.c — Implementações das funções declaradas em funcoes.h. */
 #include "funcoes.h"
+#include <math.h>
 
 void exibirMenu(void)
 {
@@ -70,4 +71,45 @@ bool valida_data(struct DataLeitura data)
         default:
             return false;
     }
+}
+
+/* FUNÇÃO RECURSIVA
+ * Caso base: n == 0 -> retorna 0.
+ * Recursão (soma recursiva): soma(n) = v[n-1] + soma(n-1), media = soma / n.
+ * Como esta função retorna a média (e não a soma), reconstrói a soma do
+ * prefixo a partir da média do prefixo: soma(n-1) = media(n-1) * (n-1). */
+float calcularMediaRecursiva(float *v, int n)
+{
+    if (n == 0)
+        return 0.0f;
+    return (v[n - 1] + calcularMediaRecursiva(v, n - 1) * (n - 1)) / n;
+}
+
+float calcularVariancia(float *v, int n, float media)
+{
+    /* Variância populacional: somatório dos (v[i] - media)^2 dividido por n. */
+    if (n == 0)
+        return 0.0f;
+
+    float soma = 0.0f;
+    for (int i = 0; i < n; i++)
+    {
+        float desvio = v[i] - media;
+        soma += desvio * desvio;
+    }
+    return soma / n;
+}
+
+float calcularDesvioPadrao(float variancia)
+{
+    /* Desvio padrão é a raiz quadrada da variância. */
+    return (float) sqrt(variancia);
+}
+
+void calcularEstatisticas(struct Estacao *e)
+{
+    /* Pipeline: média (recursiva) -> variância (usa a média) -> desvio padrão. */
+    e->media = calcularMediaRecursiva(e->leituras, e->n);
+    e->variancia = calcularVariancia(e->leituras, e->n, e->media);
+    e->desvioPadrao = calcularDesvioPadrao(e->variancia);
 }

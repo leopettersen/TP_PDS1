@@ -66,4 +66,50 @@ bool ano_bissexto(struct DataLeitura data);
  */
 bool valida_data(struct DataLeitura data);
 
+/**
+ * @brief calcula a média de n leituras recursivamente.
+ *
+ * FUNÇÃO RECURSIVA OBRIGATÓRIA do projeto: implementa uma soma recursiva
+ * com caso base n == 0 e divide o resultado pela quantidade total para
+ * obter a média aritmética.
+ *
+ * @param v vetor de leituras (float*).
+ * @param n quantidade de elementos a considerar (int).
+ * @return média aritmética dos n elementos (float).
+ */
+float calcularMediaRecursiva(float *v, int n);
+
+/**
+ * @brief calcula a variância das leituras.
+ *
+ * Variância populacional: soma dos quadrados dos desvios em relação à média,
+ * dividida por n.
+ *
+ * @param v vetor de leituras (float*).
+ * @param n quantidade de elementos (int).
+ * @param media média previamente calculada (float).
+ * @return variância dos n elementos (float).
+ */
+float calcularVariancia(float *v, int n, float media);
+
+/**
+ * @brief calcula o desvio padrão a partir da variância.
+ *
+ * Usa sqrt() de <math.h>.
+ *
+ * @param variancia variância previamente calculada (float).
+ * @return desvio padrão (float).
+ */
+float calcularDesvioPadrao(float variancia);
+
+/**
+ * @brief preenche os campos estatísticos da estação.
+ *
+ * Calcula média (recursiva), variância e desvio padrão das leituras da
+ * estação e grava nos campos media, variancia e desvioPadrao.
+ *
+ * @param e ponteiro para a estação (struct Estacao*).
+ */
+void calcularEstatisticas(struct Estacao *e);
+
 #endif
