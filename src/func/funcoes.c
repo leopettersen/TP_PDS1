@@ -1,6 +1,21 @@
 /* funcoes.c — Implementações das funções declaradas em funcoes.h. */
 #include "funcoes.h"
 
+void exibirMenu(void)
+{
+    printf("\n=== Menu ===\n");
+    printf("1 - Adicionar estação\n");
+    printf("2 - Listar estações\n");
+    printf("3 - Buscar por operador\n");
+    printf("4 - Editar estação\n");
+    printf("5 - Remover estação\n");
+    printf("6 - Detectar anomalias\n");
+    printf("7 - Salvar CSV\n");
+    printf("8 - Carregar CSV\n");
+    printf("0 - Sair\n");
+    printf("Escolha: ");
+}
+
 float *lerLeituras(int n)
 {
     float *leituras = (float*) malloc(n * sizeof(float));

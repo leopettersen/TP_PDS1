@@ -28,6 +28,14 @@ struct Estacao
 };
 
 /**
+ * @brief exibe o menu principal do sistema.
+ *
+ * Imprime as 9 opções disponíveis (1 a 8 para funcionalidades e 0 para sair)
+ * e o prompt para o usuário digitar a escolha.
+ */
+void exibirMenu(void);
+
+/**
  * @brief aloca a memória dinamicamente para n floats.
  * 
  * Esta função aloca memória dinamicamente, utilizando malloc para um número n de números flutuantes.
