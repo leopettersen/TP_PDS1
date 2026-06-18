@@ -8,23 +8,23 @@
 
 struct DataLeitura
 {
-    int dia;
-    int mes;
-    int ano;
+    int dia; /* dia do mês da leitura (1 a 31) */
+    int mes; /* mês da leitura (1 a 12) */
+    int ano; /* ano da leitura (1900 a 2100) */
 };
 
 struct Estacao
 {
-    int id;
-    char nome[40];
-    char operador[40];
-    char sensor[20];
-    int n;
-    float *leituras;
-    float media;
-    float variancia;
-    float desvioPadrao;
-    struct DataLeitura data;
+    int id;                  /* identificador único da estação */
+    char nome[40];           /* nome da estação */
+    char operador[40];       /* nome do operador responsável */
+    char sensor[20];         /* identificação/modelo do sensor */
+    int n;                   /* quantidade de leituras coletadas */
+    float *leituras;         /* vetor dinâmico com as n leituras */
+    float media;             /* média das leituras */
+    float variancia;         /* variância das leituras */
+    float desvioPadrao;      /* desvio padrão das leituras */
+    struct DataLeitura data; /* data em que as leituras foram realizadas */
 };
 
 /**
