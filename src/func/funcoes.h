@@ -112,4 +112,20 @@ float calcularDesvioPadrao(float variancia);
  */
 void calcularEstatisticas(struct Estacao *e);
 
+/**
+ * @brief adiciona uma nova estação ao vetor.
+ *
+ * Lê interativamente os campos da estação (id, nome, operador, sensor, data,
+ * quantidade e leituras), valida data (via valida_data), intervalo de n
+ * (1 a 9999) e unicidade do id. Aloca dinamicamente o vetor de leituras
+ * via lerLeituras (que faz malloc(n*sizeof(float))) e verifica retorno NULL.
+ * Após ler as leituras, chama calcularEstatisticas e insere ao final do vetor,
+ * incrementando *total.
+ *
+ * @param estacoes vetor de estações já cadastradas (struct Estacao*).
+ * @param total ponteiro para a quantidade atual de estações (int*).
+ * @note Capacidade máxima de 100 estações; em caso de erro a inclusão é abortada.
+ */
+void adicionarEstacao(struct Estacao *estacoes, int *total);
+
 #endif

@@ -113,3 +113,92 @@ void calcularEstatisticas(struct Estacao *e)
     e->variancia = calcularVariancia(e->leituras, e->n, e->media);
     e->desvioPadrao = calcularDesvioPadrao(e->variancia);
 }
+
+void adicionarEstacao(struct Estacao *estacoes, int *total)
+{
+    /* Capacidade do vetor fixo definido em main.c. */
+    if (*total >= 100)
+    {
+        printf("Limite de 100 estações atingido. Inclusão abortada.\n");
+        return;
+    }
+
+    struct Estacao nova; /* preenchemos um struct local e copiamos ao final */
+    int idValido;
+
+    /* 1) ID único: lê e compara com os já cadastrados; repete enquanto duplicar. */
+    do
+    {
+        printf("ID: ");
+        scanf("%d", &nova.id);
+
+        idValido = 1;
+        for (int i = 0; i < *total; i++)
+        {
+            if (estacoes[i].id == nova.id)
+            {
+                idValido = 0;
+                break;
+            }
+        }
+        if (!idValido)
+            printf("ID já cadastrado. Tente outro.\n");
+    } while (!idValido);
+
+    /* 2) Campos textuais. Limites (%39s/%19s) refletem o tamanho dos buffers
+     *    declarados em struct Estacao para evitar estouro. %s pula whitespace,
+     *    então lê uma única palavra (sem espaços). */
+    printf("Nome: ");
+    scanf("%39s", nova.nome);
+    printf("Operador: ");
+    scanf("%39s", nova.operador);
+    printf("Sensor: ");
+    scanf("%19s", nova.sensor);
+
+    /* 3) Data: lê dia/mes/ano e valida com valida_data (reaproveitada). */
+    do
+    {
+        printf("Data (dia mes ano, ex.: 15 3 2026): ");
+        scanf("%d %d %d", &nova.data.dia, &nova.data.mes, &nova.data.ano);
+        if (!valida_data(nova.data))
+            printf("Data inválida (verifique dia/mês/ano; ano entre 1900 e 2100).\n");
+    } while (!valida_data(nova.data));
+
+    /* 4) Quantidade de leituras: 1 a 9999. */
+    do
+    {
+        printf("Quantidade de leituras (1 a 9999): ");
+        scanf("%d", &nova.n);
+        if (nova.n < 1 || nova.n > 9999)
+            printf("Valor inválido.\n");
+    } while (nova.n < 1 || nova.n > 9999);
+
+    /* 5) ALOCAÇÃO DINÂMICA do vetor de leituras.
+     *    lerLeituras encapsula malloc(n * sizeof(float)). Se o sistema não
+     *    tiver memória disponível, malloc retorna NULL — precisamos checar
+     *    antes de gravar nele, senão acessamos ponteiro inválido (crash).
+     *    Em caso de falha, abortamos a inclusão sem alterar estacoes nem total. */
+    nova.leituras = lerLeituras(nova.n);
+    if (nova.leituras == NULL)
+    {
+        printf("Falha de alocação de memória. Estação não cadastrada.\n");
+        return;
+    }
+
+    /* 6) Leitura dos n valores no vetor recém-alocado. */
+    for (int i = 0; i < nova.n; i++)
+    {
+        printf("Leitura %d: ", i + 1);
+        scanf("%f", &nova.leituras[i]);
+    }
+
+    /* 7) Estatísticas: preenche media, variancia, desvioPadrao em nova. */
+    calcularEstatisticas(&nova);
+
+    /* 8) Cópia para o vetor (a cópia do struct copia também o PONTEIRO
+     *    nova.leituras — o bloco alocado continua válido no heap). */
+    estacoes[*total] = nova;
+    (*total)++;
+
+    printf("Estação cadastrada com sucesso. Total: %d\n", *total);
+}

@@ -31,6 +31,9 @@ int main()
         switch (opcao)
         {
             case 1: /* Adicionar estação */
+                adicionarEstacao(estacoes, &total);
+                break;
+
             case 2: /* Listar estações */
             case 3: /* Buscar por operador */
             case 4: /* Editar estação */
