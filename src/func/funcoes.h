@@ -190,4 +190,18 @@ void removerEstacao(struct Estacao *estacoes, int *total);
  */
 void detectarAnomalias(struct Estacao *estacoes, int total);
 
+/**
+ * @brief grava todas as estações em arquivo CSV.
+ *
+ * Cabeçalho:
+ *   ID,Nome,Operador,Sensor,Data,N,Media,Variancia,DesvioPadrao,Leituras
+ * Data no formato dd/mm/aaaa. As leituras vão na última coluna separadas
+ * por ';' (para não conflitar com o ',' do CSV). Verifica falha no fopen.
+ *
+ * @param estacoes vetor de estações cadastradas (struct Estacao*).
+ * @param total quantidade de estações no vetor (int).
+ * @param nomeArquivo caminho do arquivo CSV de saída (char*).
+ */
+void salvarCSV(struct Estacao *estacoes, int total, char *nomeArquivo);
+
 #endif

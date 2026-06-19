@@ -484,3 +484,40 @@ void detectarAnomalias(struct Estacao *estacoes, int total)
     else
         printf("\n%d anomalia(s) encontrada(s).\n", anomalias);
 }
+
+void salvarCSV(struct Estacao *estacoes, int total, char *nomeArquivo)
+{
+    /* Abre em modo escrita ("w") — sobrescreve se já existir.
+     * fopen retorna NULL em caso de erro (permissão, caminho inválido, etc.). */
+    FILE *f = fopen(nomeArquivo, "w");
+    if (f == NULL)
+    {
+        printf("Falha ao abrir '%s' para escrita.\n", nomeArquivo);
+        return;
+    }
+
+    /* Cabeçalho EXATAMENTE como pedido no enunciado. */
+    fprintf(f, "ID,Nome,Operador,Sensor,Data,N,Media,Variancia,DesvioPadrao,Leituras\n");
+
+    /* Uma linha por estação. */
+    for (int i = 0; i < total; i++)
+    {
+        struct Estacao *e = &estacoes[i];
+
+        /* Colunas fixas separadas por ','. Data no formato dd/mm/aaaa. */
+        fprintf(f, "%d,%s,%s,%s,%02d/%02d/%04d,%d,%.4f,%.4f,%.4f,",
+                e->id, e->nome, e->operador, e->sensor,
+                e->data.dia, e->data.mes, e->data.ano,
+                e->n, e->media, e->variancia, e->desvioPadrao);
+
+        /* Última coluna: leituras separadas por ';' (evita colidir com a
+         * vírgula do CSV; tudo cabe numa única célula da planilha). */
+        for (int j = 0; j < e->n; j++)
+            fprintf(f, "%.4f%s", e->leituras[j], (j == e->n - 1) ? "" : ";");
+
+        fprintf(f, "\n");
+    }
+
+    fclose(f);
+    printf("Arquivo '%s' salvo com %d estação(ões).\n", nomeArquivo, total);
+}

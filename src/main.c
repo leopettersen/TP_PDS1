@@ -55,6 +55,9 @@ int main()
                 break;
 
             case 7: /* Salvar CSV */
+                salvarCSV(estacoes, total, "estacoes.csv");
+                break;
+
             case 8: /* Carregar CSV */
                 printf("Em construção\n");
                 break;
