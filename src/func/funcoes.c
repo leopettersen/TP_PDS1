@@ -521,3 +521,127 @@ void salvarCSV(struct Estacao *estacoes, int total, char *nomeArquivo)
     fclose(f);
     printf("Arquivo '%s' salvo com %d estação(ões).\n", nomeArquivo, total);
 }
+
+void carregarCSV(struct Estacao *estacoes, int *total, char *nomeArquivo)
+{
+    /* Modo "r" — leitura texto. fopen retorna NULL se o arquivo não existir
+     * (ou não tivermos permissão). Tratamos isso como condição esperada. */
+    FILE *f = fopen(nomeArquivo, "r");
+    if (f == NULL)
+    {
+        printf("Arquivo '%s' não encontrado.\n", nomeArquivo);
+        return;
+    }
+
+    /* Buffer estático grande para uma linha inteira do CSV. A coluna
+     * "Leituras" pode acumular vários valores separados por ';', então
+     * dimensionamos generosamente. static evita estouro de stack. */
+    static char linha[200000];
+
+    /* 1) Descarta o cabeçalho (primeira linha). */
+    if (fgets(linha, sizeof(linha), f) == NULL)
+    {
+        fclose(f);
+        return; /* arquivo totalmente vazio */
+    }
+
+    int carregadas = 0;
+
+    /* 2) Lê cada linha de dados até EOF. */
+    while (fgets(linha, sizeof(linha), f) != NULL)
+    {
+        /* Respeita a capacidade fixa do vetor em main.c. */
+        if (*total >= 100)
+        {
+            printf("Limite de 100 estações atingido durante a carga.\n");
+            break;
+        }
+
+        struct Estacao nova; /* monta a estação num temporário antes de inserir */
+        char *t;             /* ponteiro para o token corrente do strtok */
+
+        /* PARSING DA LINHA com strtok (separador ',').
+         * strtok mantém estado interno: a 1ª chamada usa `linha`, as demais
+         * passam NULL para continuar de onde parou. Cada chamada escreve
+         * '\0' sobre o ',' encontrado, devolvendo um C string pronto. */
+
+        /* Coluna 1: ID (int). */
+        t = strtok(linha, ",");
+        if (t == NULL) continue;
+        nova.id = atoi(t);
+
+        /* Colunas 2-4: textos. strncpy com limite do buffer da struct para
+         * evitar overflow; força '\0' final por segurança. */
+        t = strtok(NULL, ","); if (!t) continue;
+        strncpy(nova.nome, t, 39); nova.nome[39] = '\0';
+
+        t = strtok(NULL, ","); if (!t) continue;
+        strncpy(nova.operador, t, 39); nova.operador[39] = '\0';
+
+        t = strtok(NULL, ","); if (!t) continue;
+        strncpy(nova.sensor, t, 19); nova.sensor[19] = '\0';
+
+        /* Coluna 5: data no formato dd/mm/aaaa, extraída com sscanf. */
+        t = strtok(NULL, ","); if (!t) continue;
+        if (sscanf(t, "%d/%d/%d",
+                   &nova.data.dia, &nova.data.mes, &nova.data.ano) != 3)
+            continue;
+
+        /* Coluna 6: N (quantidade de leituras). */
+        t = strtok(NULL, ","); if (!t) continue;
+        nova.n = atoi(t);
+        if (nova.n < 1) continue; /* protege malloc(0/negativo) */
+
+        /* Colunas 7-9: media, variancia, desvioPadrao. Consumimos os tokens
+         * para avançar até a coluna 10, mas DESCARTAMOS os valores —
+         * vamos recalcular tudo via calcularEstatisticas para garantir
+         * consistência com as leituras lidas. */
+        t = strtok(NULL, ","); if (!t) continue; /* media     (descartada) */
+        t = strtok(NULL, ","); if (!t) continue; /* variancia (descartada) */
+        t = strtok(NULL, ","); if (!t) continue; /* desvio    (descartado) */
+
+        /* Coluna 10: leituras, separadas por ';'. Esta é a última coluna,
+         * então o token inclui o '\n' final do fgets — precisamos remover
+         * antes de tokenizar, senão a última leitura traria '\n' grudado. */
+        t = strtok(NULL, ","); if (!t) continue;
+        char *nl;
+        if ((nl = strchr(t, '\n')) != NULL) *nl = '\0';
+        if ((nl = strchr(t, '\r')) != NULL) *nl = '\0';
+
+        /* Alocação dinâmica do vetor de leituras (mesma lógica do
+         * adicionarEstacao). Checagem de NULL para segurança. */
+        nova.leituras = (float*) malloc(nova.n * sizeof(float));
+        if (nova.leituras == NULL)
+        {
+            printf("Falha de alocação. Abortando carga.\n");
+            break;
+        }
+
+        /* PARSING da coluna leituras com strtok (separador ';').
+         * A chamada strtok(t, ";") substitui o estado interno do strtok,
+         * mas isso é OK porque já extraímos todas as colunas via ','. */
+        int idx = 0;
+        char *val = strtok(t, ";");
+        while (val != NULL && idx < nova.n)
+        {
+            nova.leituras[idx++] = (float) atof(val);
+            val = strtok(NULL, ";");
+        }
+        /* Se o CSV trouxer menos valores que n, completa com 0 para
+         * manter o vetor consistente com o n declarado. */
+        while (idx < nova.n)
+            nova.leituras[idx++] = 0.0f;
+
+        /* Recalcula media/variancia/desvio a partir das leituras lidas. */
+        calcularEstatisticas(&nova);
+
+        /* Insere no vetor principal. */
+        estacoes[*total] = nova;
+        (*total)++;
+        carregadas++;
+    }
+
+    fclose(f);
+    printf("%d estação(ões) carregada(s) de '%s'. Total: %d\n",
+           carregadas, nomeArquivo, *total);
+}

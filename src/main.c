@@ -59,7 +59,7 @@ int main()
                 break;
 
             case 8: /* Carregar CSV */
-                printf("Em construção\n");
+                carregarCSV(estacoes, &total, "estacoes.csv");
                 break;
 
             case 0:

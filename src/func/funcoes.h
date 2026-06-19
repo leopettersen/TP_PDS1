@@ -204,4 +204,21 @@ void detectarAnomalias(struct Estacao *estacoes, int total);
  */
 void salvarCSV(struct Estacao *estacoes, int total, char *nomeArquivo);
 
+/**
+ * @brief carrega estações de um arquivo CSV.
+ *
+ * Abre o arquivo, descarta a primeira linha (cabeçalho) e processa cada
+ * linha subsequente com fgets + strtok (separador ','). A última coluna
+ * (leituras) é tokenizada com separador ';'. Aloca o vetor de leituras
+ * com malloc e recalcula média, variância e desvio padrão via
+ * calcularEstatisticas. Avisa se o arquivo não existir.
+ *
+ * @param estacoes vetor onde as estações serão acrescentadas (struct Estacao*).
+ * @param total ponteiro para a quantidade atual; é incrementado a cada
+ *              estação carregada (int*).
+ * @param nomeArquivo caminho do arquivo CSV de entrada (char*).
+ * @note As estações são APENDADAS ao vetor existente (não substituem).
+ */
+void carregarCSV(struct Estacao *estacoes, int *total, char *nomeArquivo);
+
 #endif
