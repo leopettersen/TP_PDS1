@@ -202,3 +202,40 @@ void adicionarEstacao(struct Estacao *estacoes, int *total)
 
     printf("Estação cadastrada com sucesso. Total: %d\n", *total);
 }
+
+void listarEstacoes(struct Estacao *estacoes, int total)
+{
+    /* Caso especial: nenhuma estação cadastrada — informa e encerra. */
+    if (total == 0)
+    {
+        printf("Nenhuma estação cadastrada.\n");
+        return;
+    }
+
+    printf("\n=== %d estação(ões) cadastrada(s) ===\n", total);
+
+    /* Itera pelas estações imprimindo cada campo em linha própria. */
+    for (int i = 0; i < total; i++)
+    {
+        struct Estacao *e = &estacoes[i]; /* alias para encurtar o acesso */
+
+        printf("\n--- Estação %d ---\n", i + 1);
+        printf("ID........: %d\n", e->id);
+        printf("Nome......: %s\n", e->nome);
+        printf("Operador..: %s\n", e->operador);
+        printf("Sensor....: %s\n", e->sensor);
+
+        /* Data com zero à esquerda: dd/mm/aaaa. */
+        printf("Data......: %02d/%02d/%04d\n", e->data.dia, e->data.mes, e->data.ano);
+
+        /* Leituras separadas por vírgula na mesma linha. */
+        printf("Leituras..: (n=%d) ", e->n);
+        for (int j = 0; j < e->n; j++)
+            printf("%.2f%s", e->leituras[j], (j == e->n - 1) ? "" : ", ");
+        printf("\n");
+
+        printf("Média.....: %.4f\n", e->media);
+        printf("Variância.: %.4f\n", e->variancia);
+        printf("Desv. pad.: %.4f\n", e->desvioPadrao);
+    }
+}

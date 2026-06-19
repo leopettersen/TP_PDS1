@@ -35,6 +35,9 @@ int main()
                 break;
 
             case 2: /* Listar estações */
+                listarEstacoes(estacoes, total);
+                break;
+
             case 3: /* Buscar por operador */
             case 4: /* Editar estação */
             case 5: /* Remover estação */

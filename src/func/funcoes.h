@@ -128,4 +128,16 @@ void calcularEstatisticas(struct Estacao *e);
  */
 void adicionarEstacao(struct Estacao *estacoes, int *total);
 
+/**
+ * @brief lista todas as estações cadastradas.
+ *
+ * Imprime, para cada estação, todos os campos (id, nome, operador, sensor,
+ * data formatada como dd/mm/aaaa, leituras e estatísticas). Caso não haja
+ * estações cadastradas, exibe uma mensagem informando.
+ *
+ * @param estacoes vetor de estações cadastradas (struct Estacao*).
+ * @param total quantidade de estações no vetor (int).
+ */
+void listarEstacoes(struct Estacao *estacoes, int total);
+
 #endif
