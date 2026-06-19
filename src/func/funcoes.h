@@ -221,4 +221,17 @@ void salvarCSV(struct Estacao *estacoes, int total, char *nomeArquivo);
  */
 void carregarCSV(struct Estacao *estacoes, int *total, char *nomeArquivo);
 
+/**
+ * @brief libera toda a memória dinâmica das estações.
+ *
+ * Percorre o vetor e chama free() no campo leituras de cada estação,
+ * devolvendo ao heap os blocos alocados por malloc em adicionarEstacao
+ * e carregarCSV. Deve ser chamada antes do programa encerrar para evitar
+ * vazamento de memória.
+ *
+ * @param estacoes vetor de estações cadastradas (struct Estacao*).
+ * @param total quantidade de estações no vetor (int).
+ */
+void liberarTudo(struct Estacao *estacoes, int total);
+
 #endif

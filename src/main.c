@@ -63,6 +63,8 @@ int main()
                 break;
 
             case 0:
+                /* Libera toda a memória dinâmica antes de sair. */
+                liberarTudo(estacoes, total);
                 printf("Encerrando o sistema.\n");
                 break;
 

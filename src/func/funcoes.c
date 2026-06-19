@@ -645,3 +645,18 @@ void carregarCSV(struct Estacao *estacoes, int *total, char *nomeArquivo)
     printf("%d estação(ões) carregada(s) de '%s'. Total: %d\n",
            carregadas, nomeArquivo, *total);
 }
+
+void liberarTudo(struct Estacao *estacoes, int total)
+{
+    /* Cada estação tem um vetor leituras alocado dinamicamente em
+     * adicionarEstacao (via lerLeituras) ou em carregarCSV. Ao encerrar
+     * o programa precisamos devolver esses blocos ao heap; sem free,
+     * os sistemas operacionais até recuperam a memória ao fim do processo,
+     * mas o programa ficaria com vazamento detectável por Valgrind/ASan
+     * e fugiria do contrato do enunciado. */
+    for (int i = 0; i < total; i++)
+    {
+        free(estacoes[i].leituras);
+        estacoes[i].leituras = NULL; /* defensivo: evita reuso acidental */
+    }
+}
