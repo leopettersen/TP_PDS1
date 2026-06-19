@@ -279,3 +279,101 @@ void buscarPorOperador(struct Estacao *estacoes, int total)
     else
         printf("\n%d estação(ões) encontrada(s).\n", encontrados);
 }
+
+void editarEstacao(struct Estacao *estacoes, int total)
+{
+    /* Caso vazio: nada a editar. */
+    if (total == 0)
+    {
+        printf("Nenhuma estação cadastrada.\n");
+        return;
+    }
+
+    int id;
+    printf("ID da estação a editar: ");
+    scanf("%d", &id);
+
+    /* Busca linear pelo id. idx = -1 sinaliza "não encontrado". */
+    int idx = -1;
+    for (int i = 0; i < total; i++)
+    {
+        if (estacoes[i].id == id)
+        {
+            idx = i;
+            break;
+        }
+    }
+    if (idx == -1)
+    {
+        printf("Estação com ID %d não encontrada.\n", id);
+        return;
+    }
+
+    /* Ponteiro para a estação encontrada — alterações são feitas in-place. */
+    struct Estacao *e = &estacoes[idx];
+    int op;
+
+    /* Submenu de edição: roda até o usuário escolher 0 (Voltar). */
+    do
+    {
+        printf("\n--- Editar Estação ID %d ---\n", e->id);
+        printf("1 - Nome     (%s)\n", e->nome);
+        printf("2 - Operador (%s)\n", e->operador);
+        printf("3 - Sensor   (%s)\n", e->sensor);
+        printf("4 - Data     (%02d/%02d/%04d)\n",
+               e->data.dia, e->data.mes, e->data.ano);
+        printf("0 - Voltar\n");
+        printf("Escolha: ");
+
+        /* Mesma proteção contra entrada não numérica do menu principal. */
+        if (scanf("%d", &op) != 1)
+        {
+            int c;
+            while ((c = getchar()) != '\n' && c != EOF) { }
+            op = -1;
+        }
+
+        switch (op)
+        {
+            case 1:
+                printf("Novo nome: ");
+                scanf("%39s", e->nome);
+                break;
+
+            case 2:
+                printf("Novo operador: ");
+                scanf("%39s", e->operador);
+                break;
+
+            case 3:
+                printf("Novo sensor: ");
+                scanf("%19s", e->sensor);
+                break;
+
+            case 4:
+            {
+                /* Lê a data num temporário e só grava após validação,
+                 * para não corromper a data atual em caso de cancelamento. */
+                struct DataLeitura nova;
+                do
+                {
+                    printf("Nova data (dia mes ano): ");
+                    scanf("%d %d %d", &nova.dia, &nova.mes, &nova.ano);
+                    if (!valida_data(nova))
+                        printf("Data inválida (verifique dia/mês/ano; ano 1900-2100).\n");
+                } while (!valida_data(nova));
+                e->data = nova;
+                break;
+            }
+
+            case 0:
+                break;
+
+            default:
+                printf("Opção inválida.\n");
+                break;
+        }
+    } while (op != 0);
+
+    printf("Edição concluída.\n");
+}

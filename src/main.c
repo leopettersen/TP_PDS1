@@ -43,6 +43,9 @@ int main()
                 break;
 
             case 4: /* Editar estação */
+                editarEstacao(estacoes, total);
+                break;
+
             case 5: /* Remover estação */
             case 6: /* Detectar anomalias */
             case 7: /* Salvar CSV */

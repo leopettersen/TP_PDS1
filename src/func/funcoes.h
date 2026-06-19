@@ -152,4 +152,17 @@ void listarEstacoes(struct Estacao *estacoes, int total);
  */
 void buscarPorOperador(struct Estacao *estacoes, int total);
 
+/**
+ * @brief edita os campos de uma estação existente.
+ *
+ * Pede o id e localiza a estação correspondente. Em caso de sucesso, abre
+ * um submenu que permite alterar nome, operador, sensor ou data
+ * (reaproveitando valida_data). Avisa se o id não existir.
+ *
+ * @param estacoes vetor de estações cadastradas (struct Estacao*).
+ * @param total quantidade de estações no vetor (int).
+ * @note Não altera o id, nem o vetor de leituras nem as estatísticas.
+ */
+void editarEstacao(struct Estacao *estacoes, int total);
+
 #endif
