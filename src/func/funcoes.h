@@ -177,4 +177,17 @@ void editarEstacao(struct Estacao *estacoes, int total);
  */
 void removerEstacao(struct Estacao *estacoes, int *total);
 
+/**
+ * @brief detecta leituras anômalas (critério 2σ) em uma estação.
+ *
+ * Pede o id da estação e lista todas as leituras x cujo desvio absoluto em
+ * relação à média ultrapasse duas vezes o desvio padrão: |x - media| > 2*σ.
+ * Usa fabs (math.h). Avisa quando o id não existir ou quando não houver
+ * nenhuma leitura anômala.
+ *
+ * @param estacoes vetor de estações cadastradas (struct Estacao*).
+ * @param total quantidade de estações no vetor (int).
+ */
+void detectarAnomalias(struct Estacao *estacoes, int total);
+
 #endif

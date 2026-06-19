@@ -425,3 +425,62 @@ void removerEstacao(struct Estacao *estacoes, int *total)
 
     printf("Estação ID %d removida. Total: %d\n", id, *total);
 }
+
+void detectarAnomalias(struct Estacao *estacoes, int total)
+{
+    /* Caso vazio: nada a analisar. */
+    if (total == 0)
+    {
+        printf("Nenhuma estação cadastrada.\n");
+        return;
+    }
+
+    int id;
+    printf("ID da estação: ");
+    scanf("%d", &id);
+
+    /* Busca linear pelo id. */
+    int idx = -1;
+    for (int i = 0; i < total; i++)
+    {
+        if (estacoes[i].id == id)
+        {
+            idx = i;
+            break;
+        }
+    }
+    if (idx == -1)
+    {
+        printf("Estação com ID %d não encontrada.\n", id);
+        return;
+    }
+
+    struct Estacao *e = &estacoes[idx];
+
+    /* CRITÉRIO 2σ (regra empírica): em uma distribuição aproximadamente
+     * normal, cerca de 95% dos valores caem em [media - 2σ, media + 2σ].
+     * Tratamos como anômala qualquer leitura fora dessa janela, ou seja:
+     *     |x - media| > 2 * desvioPadrao
+     * fabs garante o módulo independentemente do sinal do desvio. */
+    float limite = 2.0f * e->desvioPadrao;
+
+    printf("\nAnomalias na estação ID %d (média=%.4f, 2σ=%.4f):\n",
+           e->id, e->media, limite);
+
+    int anomalias = 0;
+    for (int i = 0; i < e->n; i++)
+    {
+        double desvio = fabs((double)(e->leituras[i] - e->media));
+        if (desvio > limite)
+        {
+            printf("  Leitura %d: %.4f (|x - média| = %.4f)\n",
+                   i + 1, e->leituras[i], desvio);
+            anomalias++;
+        }
+    }
+
+    if (anomalias == 0)
+        printf("Nenhuma anomalia detectada.\n");
+    else
+        printf("\n%d anomalia(s) encontrada(s).\n", anomalias);
+}

@@ -51,6 +51,9 @@ int main()
                 break;
 
             case 6: /* Detectar anomalias */
+                detectarAnomalias(estacoes, total);
+                break;
+
             case 7: /* Salvar CSV */
             case 8: /* Carregar CSV */
                 printf("Em construção\n");
