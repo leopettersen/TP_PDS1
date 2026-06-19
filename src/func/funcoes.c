@@ -1,6 +1,7 @@
 /* funcoes.c — Implementações das funções declaradas em funcoes.h. */
 #include "funcoes.h"
 #include <math.h>
+#include <string.h>
 
 void exibirMenu(void)
 {
@@ -238,4 +239,43 @@ void listarEstacoes(struct Estacao *estacoes, int total)
         printf("Variância.: %.4f\n", e->variancia);
         printf("Desv. pad.: %.4f\n", e->desvioPadrao);
     }
+}
+
+void buscarPorOperador(struct Estacao *estacoes, int total)
+{
+    /* Caso vazio: nada a buscar. */
+    if (total == 0)
+    {
+        printf("Nenhuma estação cadastrada.\n");
+        return;
+    }
+
+    /* Buffer do mesmo tamanho do campo operador na struct (40). */
+    char alvo[40];
+    printf("Operador a buscar: ");
+    scanf("%39s", alvo);
+
+    int encontrados = 0;
+
+    /* Percorre todas as estações; strcmp == 0 indica nomes iguais. */
+    for (int i = 0; i < total; i++)
+    {
+        if (strcmp(estacoes[i].operador, alvo) == 0)
+        {
+            struct Estacao *e = &estacoes[i];
+            printf("\n--- Estação ID %d ---\n", e->id);
+            printf("Nome......: %s\n", e->nome);
+            printf("Sensor....: %s\n", e->sensor);
+            printf("Data......: %02d/%02d/%04d\n", e->data.dia, e->data.mes, e->data.ano);
+            printf("Média.....: %.4f\n", e->media);
+            printf("Desv. pad.: %.4f\n", e->desvioPadrao);
+            encontrados++;
+        }
+    }
+
+    /* Se nenhuma estação bateu com o operador, avisa o usuário. */
+    if (encontrados == 0)
+        printf("Nenhuma estação encontrada para o operador '%s'.\n", alvo);
+    else
+        printf("\n%d estação(ões) encontrada(s).\n", encontrados);
 }

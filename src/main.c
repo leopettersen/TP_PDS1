@@ -39,6 +39,9 @@ int main()
                 break;
 
             case 3: /* Buscar por operador */
+                buscarPorOperador(estacoes, total);
+                break;
+
             case 4: /* Editar estação */
             case 5: /* Remover estação */
             case 6: /* Detectar anomalias */

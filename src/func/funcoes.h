@@ -140,4 +140,16 @@ void adicionarEstacao(struct Estacao *estacoes, int *total);
  */
 void listarEstacoes(struct Estacao *estacoes, int total);
 
+/**
+ * @brief busca e lista estações de um operador específico.
+ *
+ * Pede o nome do operador ao usuário e percorre o vetor comparando com
+ * strcmp. Imprime os dados das estações cujo campo operador coincide.
+ * Avisa quando nenhuma estação é encontrada.
+ *
+ * @param estacoes vetor de estações cadastradas (struct Estacao*).
+ * @param total quantidade de estações no vetor (int).
+ */
+void buscarPorOperador(struct Estacao *estacoes, int total);
+
 #endif
