@@ -47,6 +47,9 @@ int main()
                 break;
 
             case 5: /* Remover estação */
+                removerEstacao(estacoes, &total);
+                break;
+
             case 6: /* Detectar anomalias */
             case 7: /* Salvar CSV */
             case 8: /* Carregar CSV */

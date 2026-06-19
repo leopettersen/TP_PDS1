@@ -377,3 +377,51 @@ void editarEstacao(struct Estacao *estacoes, int total)
 
     printf("Edição concluída.\n");
 }
+
+void removerEstacao(struct Estacao *estacoes, int *total)
+{
+    /* Caso vazio: nada a remover. */
+    if (*total == 0)
+    {
+        printf("Nenhuma estação cadastrada.\n");
+        return;
+    }
+
+    int id;
+    printf("ID da estação a remover: ");
+    scanf("%d", &id);
+
+    /* Busca linear pelo id. idx = -1 sinaliza "não encontrado". */
+    int idx = -1;
+    for (int i = 0; i < *total; i++)
+    {
+        if (estacoes[i].id == id)
+        {
+            idx = i;
+            break;
+        }
+    }
+    if (idx == -1)
+    {
+        printf("Estação com ID %d não encontrada.\n", id);
+        return;
+    }
+
+    /* IMPORTANTE — LIBERAR MEMÓRIA DINÂMICA.
+     * O vetor estacoes[idx].leituras foi alocado com malloc em
+     * adicionarEstacao. Antes de sobrescrever esta posição (no shift
+     * abaixo), precisamos chamar free() para devolver o bloco ao heap;
+     * caso contrário o ponteiro seria perdido e teríamos VAZAMENTO. */
+    free(estacoes[idx].leituras);
+    estacoes[idx].leituras = NULL; /* defensivo: evita dangling pointer */
+
+    /* Desloca as estações posteriores uma posição para trás. Cada
+     * atribuição copia o struct inteiro, incluindo o ponteiro leituras
+     * (que continua válido — o malloc original segue ativo no heap). */
+    for (int i = idx; i < *total - 1; i++)
+        estacoes[i] = estacoes[i + 1];
+
+    (*total)--;
+
+    printf("Estação ID %d removida. Total: %d\n", id, *total);
+}

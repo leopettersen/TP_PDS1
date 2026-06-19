@@ -165,4 +165,16 @@ void buscarPorOperador(struct Estacao *estacoes, int total);
  */
 void editarEstacao(struct Estacao *estacoes, int total);
 
+/**
+ * @brief remove uma estação do vetor pelo id.
+ *
+ * Pede o id, localiza a estação, libera (free) o vetor leituras dela para
+ * evitar vazamento, desloca as estações seguintes uma posição para trás
+ * e decrementa *total. Avisa se o id não existir.
+ *
+ * @param estacoes vetor de estações cadastradas (struct Estacao*).
+ * @param total ponteiro para a quantidade atual de estações (int*).
+ */
+void removerEstacao(struct Estacao *estacoes, int *total);
+
 #endif
